@@ -70,7 +70,7 @@ class AutoRF:
 		self.target = target
 		self.threshold = threshold
 
-		value_sets = list(set(self.target.values))
+		value_sets = list(set(self.target))
 
 		if len(value_sets) < self.threshold:
 			if len(value_sets) == 2:
@@ -149,4 +149,4 @@ class AutoRF:
 		met = self.scoring(clf, te_x, te_y, prob)
 		message = self.save_model(clf)
 
-		return message
+		return message, met, prob, clf
