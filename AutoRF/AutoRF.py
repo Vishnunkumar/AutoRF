@@ -172,12 +172,12 @@ class AutoRF:
 		self.target = target
 		self.prob = prob
 		self.n_jobs = n_jobs
-		mf = self.train.shape[1]
+		mf = int(self.train.shape[1])
 		
 		if self.param_dict == '':
 			
 			self.param_dict = {"max_depth": [3, 8, 15],
-					   "max_features": [int(mf/4), int(mf/2), max_feature],
+					   "max_features": [int(mf/4), int(mf/2), mf],
 					   "n_estimators": [mf, int(mf*3)]}
 
 			if self.prob == 'Regression':
