@@ -159,7 +159,7 @@ class AutoRF:
 
 		return logger.info("Model has been saved to random_forest.joblib")
 	
-	def parameter_tuning(self, param_dict='', n_jobs=15, clf, train, target, prob):
+	def parameter_tuning(self, clf, train, target, prob, param_dict='', n_jobs=10):
 		
 		"""
 		Only applicable for Random Forest models
