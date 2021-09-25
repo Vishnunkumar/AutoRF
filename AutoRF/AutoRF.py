@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import joblib
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.metrics import f1_score, mean_absolute_error, mean_squared_log_error, precision_score
+from sklearn.metrics import f1_score, mean_absolute_error, mean_squared_log_error, precision_score, make_scorer
 from sklearn.preprocessing import Normalizer, RobustScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from pysimplelog import Logger
 
 logger = Logger()
@@ -158,9 +158,76 @@ class AutoRF:
 		joblib.dump(clf, "random_forest.joblib")
 
 		return logger.info("Model has been saved to random_forest.joblib")
+	
+	def parameter_tuning(self, param_dict='', n_jobs=15, clf, train, target, prob):
+		
+		"""
+		Only applicable for Random Forest models
+		"""
+		
+		self.param_dict = param_dict
+		self.clf = clf
+		self.train = train
+		self.target = target
+		self.prob = prob
+		self.n_jobs = n_jobs
+		mf = self.train.shape[1]
+		
+		if self.param_dict == '':
+			
+			self.param_dict = {"max_depth": [3, 8, 15],
+					   "max_features": [int(mf/4), int(mf/2), max_feature],
+					   "n_estimators": [mf, int(mf*3)]}
 
-
+			if self.prob == 'Regression':
+				
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				scorer = make_scorer(mean_absolute_error)
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+			
+			elif self.prob == "Binary-Classification":
+				
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
+				scorer = make_scorer(f1_score(average="weighted"))
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+			
+			else:
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				scorer = make_scorer(f1_score())
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+		
+		else:
+			if self.prob == 'Regression':
+				
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				scorer = make_scorer(mean_absolute_error)
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+			
+			elif self.prob == "Binary-Classification":
+				
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
+				scorer = make_scorer(f1_score(average="weighted"))
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+			
+			else:
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				scorer = make_scorer(f1_score())
+				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
+				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				
+		
+		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, scorer
+		
 	def pipeline(self, typ="Normalization", th=100, estim=''):
+		
+		"""
+		Pipeline from preprocessing to training
+		"""
 
 		self.typ = typ
 		self.th = th
