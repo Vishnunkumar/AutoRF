@@ -102,6 +102,7 @@ class AutoRF:
 			tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 			rf_r = self.estimator
 			clf = rf_r.fit(tr_x, tr_y)
+			prob = str(self.estimator)
 			
 			return clf, te_x, te_y, prob
 		
