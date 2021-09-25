@@ -5,6 +5,9 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import f1_score, mean_absolute_error, mean_squared_log_error, precision_score
 from sklearn.preprocessing import Normalizer, RobustScaler
 from sklearn.model_selection import train_test_split
+from pysimplelog import Logger
+
+logger = Logger()
 
 class AutoRF:
 
@@ -73,7 +76,7 @@ class AutoRF:
 		value_sets = list(set(self.target))
 
 		if len(value_sets) < self.threshold:
-			if len(value_sets) == 2:
+			if len(value_sets) == 1:
 				prob = "Binary-Classification"
 			else:
 				prob = "Multi-Classification"
@@ -136,17 +139,19 @@ class AutoRF:
 
 		joblib.dump(clf, "random_forest.joblib")
 
-		return "model_saved to random_forest.joblib"
+		return logger.info("Model has been saved")
 
 
 	def pipeline(self, typ="Normalization", th=100):
 
 		self.typ = typ
 		self.th = th
-
+		
+		logger.info("Pipeline has been initiated")
 		prep_x, prep_y = self.preprocess(self.typ)
 		clf, te_x, te_y, prob = self.model(prep_x, prep_y, self.th)
 		met = self.scoring(clf, te_x, te_y, prob)
 		message = self.save_model(clf)
+		logger.info("Pipeline is complete")
 
 		return message, met, prob, clf
