@@ -55,13 +55,13 @@ class AutoRF:
 
 		else:
 
-			rob_scaler = RobustScaler()
+			rob_scaler = self.mode
 			self.X = rob_scaler.fit_transform(self.X)
 
 		return self.X, self.y
 
 
-	def model(self, train, target, threshold=100):
+	def model(self, train, target, estimator='', threshold=100):
 
 		"""
 		Inputs are the preprocessed data from the preprocess function and output is the validation data
@@ -72,29 +72,39 @@ class AutoRF:
 		self.train = train
 		self.target = target
 		self.threshold = threshold
+		self.estimator = estimator
 
 		value_sets = list(set(self.target))
+		
+		if self.estimator != '':
+			if len(value_sets) < self.threshold:
+				if len(value_sets) == 1:
+					prob = "Binary-Classification"
+				else:
+					prob = "Multi-Classification"
 
-		if len(value_sets) < self.threshold:
-			if len(value_sets) == 1:
-				prob = "Binary-Classification"
-			else:
-				prob = "Multi-Classification"
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
+				rf_c = RandomForestClassifier()
+				clf = rf_c.fit(tr_x, tr_y)
 
-			tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
-			rf_c = RandomForestClassifier()
-			clf = rf_c.fit(tr_x, tr_y)
-			
-			return clf, te_x, te_y, prob
+				return clf, te_x, te_y, prob
 
 
-		elif len(value_sets) > self.threshold:
-			prob = "Regression"
+			elif len(value_sets) > self.threshold:
+				prob = "Regression"
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				rf_r = RandomForestRegressor()
+				clf = rf_r.fit(tr_x, tr_y)
+
+				return clf, te_x, te_y, prob
+		
+		else:
 			tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
-			rf_r = RandomForestRegressor()
+			rf_r = self.estimator
 			clf = rf_r.fit(tr_x, tr_y)
 			
 			return clf, te_x, te_y, prob
+		
 
 	def scoring(self, clf, te_x, te_y, prob):
 
@@ -111,20 +121,28 @@ class AutoRF:
 
 			preds = clf.predict(self.te_x)
 			met = mean_absolute_error(self.te_y, preds)
-
-			return met
+			metr = {}
+			metr['MAE'] = met
+			
+			return metr
 
 		elif self.prob == "Multi-Classification":
 			
 			preds = clf.predict(self.te_x)
 			met = f1_score(self.te_y, preds, average='weighted')
+			
+			metr = {}
+			metr['f1-weighted'] = met
 
-			return met
+			return metr
 
 		else:
 			
 			preds = clf.predict(self.te_x)
 			met = f1_score(self.te_y, preds)
+			
+			metr = {}
+			metr['f1'] = met
 
 			return met
 		
@@ -139,19 +157,20 @@ class AutoRF:
 
 		joblib.dump(clf, "random_forest.joblib")
 
-		return logger.info("Model has been saved")
+		return logger.info("Model has been saved to random_forest.joblib")
 
 
-	def pipeline(self, typ="Normalization", th=100):
+	def pipeline(self, typ="Normalization", th=100, estim=''):
 
 		self.typ = typ
 		self.th = th
+		self.estim = estim
 		
 		logger.info("Pipeline has been initiated")
 		prep_x, prep_y = self.preprocess(self.typ)
-		clf, te_x, te_y, prob = self.model(prep_x, prep_y, self.th)
+		clf, te_x, te_y, prob = self.model(prep_x, prep_y, self.estim, self.th)
 		met = self.scoring(clf, te_x, te_y, prob)
 		message = self.save_model(clf)
 		logger.info("Pipeline is complete")
 
-		return message, met, prob, clf
+		return met, prob, clf
