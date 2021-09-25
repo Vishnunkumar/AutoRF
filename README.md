@@ -4,7 +4,7 @@ Auto ML using random forest trees
 ## Installation
 
 ```
-pip install AutoRF
+pip install -U AutoRF
 ```
 
 ## Simple Usage
