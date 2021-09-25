@@ -76,7 +76,7 @@ class AutoRF:
 
 		value_sets = list(set(self.target))
 		
-		if self.estimator != '':
+		if self.estimator == '':
 			if len(value_sets) < self.threshold:
 				if len(value_sets) == 1:
 					prob = "Binary-Classification"
