@@ -189,7 +189,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 			
 			elif self.prob == "Multi-Classification":
 				
@@ -200,7 +200,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 			
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
@@ -210,7 +210,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 		
 		else:
 			if self.prob == 'Regression':
@@ -222,7 +222,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 			
 			elif self.prob == "Multi-Classification":
 				
@@ -233,7 +233,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 			
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
@@ -243,7 +243,7 @@ class AutoRF:
 				
 				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
-				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
+				grid_search.fit(tr_x, tr_y)
 				
 		
 		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, scorer
