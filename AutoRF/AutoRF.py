@@ -187,7 +187,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return mean_absolute_error(y_true, y_pred)
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
@@ -198,7 +198,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return f1_score(y_true, y_pred, average="weighted")
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
@@ -208,7 +208,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return f1_score(y_true, y_pred)
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 		
@@ -220,7 +220,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return mean_absolute_error(y_true, y_pred)
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
@@ -231,7 +231,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return f1_score(y_true, y_pred, average="weighted")
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
@@ -241,7 +241,7 @@ class AutoRF:
 				def custom_score(y_true, y_pred):
 					return f1_score(y_true, y_pred)
 				
-				scorer = metrics.make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 				
