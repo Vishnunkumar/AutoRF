@@ -185,32 +185,34 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return mean_absolute_error(y_true, y_pred), "mean_absolute_error"
+					return mean_absolute_error(y_true, y_pred)
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
+				name = "mae"
 			
 			elif self.prob == "Multi-Classification":
 				
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred, average="weighted"), "f1_score_weighted"
+					return f1_score(y_true, y_pred, average="weighted")
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
-			
+				name = "f1_score_weighted"
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred), "f1_score"
+					return f1_score(y_true, y_pred)
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
+				name = "f1_score"
 		
 		else:
 			if self.prob == 'Regression':
@@ -218,32 +220,35 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return mean_absolute_error(y_true, y_pred), "mean_absolute_error"
+					return mean_absolute_error(y_true, y_pred)
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
+				name = "mae"
 			
 			elif self.prob == "Multi-Classification":
 				
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred, average="weighted"), "f1_score_weighted"
+					return f1_score(y_true, y_pred, average="weighted")
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
+				name = "f1_score_weighted"
 			
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred), "f1_score"
+					return f1_score(y_true, y_pred)
 				
-				scorer, name = make_scorer(custom_score)
+				scorer = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
+				name = "f1_score"
 				
 		
 		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, name
