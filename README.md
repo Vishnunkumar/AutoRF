@@ -45,4 +45,6 @@ rf_auto.parameter_tuning(ensemble.RandomForestClassifier(),
                          prep_x, prep_y, 
                          "Multi-Classification",
                          param_dict=param_dict,
-                         n_jobs=20)```
+                         n_jobs=20)
+                         
+```
