@@ -196,7 +196,7 @@ class AutoRF:
 			
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
-				scorer = make_scorer(f1_score())
+				scorer = make_scorer(f1_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 		
@@ -217,7 +217,7 @@ class AutoRF:
 			
 			else:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
-				scorer = make_scorer(f1_score())
+				scorer = make_scorer(f1_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 				
