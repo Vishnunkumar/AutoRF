@@ -55,13 +55,13 @@ class AutoRF:
 
 		else:
 
-			rob_scaler = self.mode
-			self.X = rob_scaler.fit_transform(self.X)
+			scaler = self.mode
+			self.X = scaler.fit_transform(self.X)
 
 		return self.X, self.y
 
 
-	def model(self, train, target, estimator='', threshold=100):
+	def model(self, train, target, estimator='RF', threshold=100):
 
 		"""
 		Inputs are the preprocessed data from the preprocess function and output is the validation data
@@ -76,7 +76,7 @@ class AutoRF:
 
 		value_sets = list(set(self.target))
 		
-		if self.estimator == '':
+		if self.estimator == 'RF':
 			if len(value_sets) < self.threshold:
 				if len(value_sets) == 1:
 					prob = "Binary-Classification"
@@ -187,7 +187,7 @@ class AutoRF:
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
-			elif self.prob == "Binary-Classification":
+			elif self.prob == "Multi-Classification":
 				
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 				scorer = make_scorer(f1_score(average="weighted"))
@@ -208,7 +208,7 @@ class AutoRF:
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y.reshape(tr_y.shape[0],))
 			
-			elif self.prob == "Binary-Classification":
+			elif self.prob == "Multi-Classification":
 				
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 				scorer = make_scorer(f1_score(average="weighted"))
@@ -224,7 +224,7 @@ class AutoRF:
 		
 		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, scorer
 		
-	def pipeline(self, typ="Normalization", th=100, estim=''):
+	def pipeline(self, typ="Normalization", th=100, estim='RF'):
 		
 		"""
 		Pipeline from preprocessing to training
