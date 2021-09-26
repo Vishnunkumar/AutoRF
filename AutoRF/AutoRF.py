@@ -99,12 +99,26 @@ class AutoRF:
 				return clf, te_x, te_y, prob
 		
 		else:
-			tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
-			rf_r = self.estimator
-			clf = rf_r.fit(tr_x, tr_y)
-			prob = str(self.estimator)
-			
-			return clf, te_x, te_y, prob
+			if len(value_sets) < self.threshold:
+				if len(value_sets) == 1:
+					prob = "Binary-Classification"
+				else:
+					prob = "Multi-Classification"
+
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
+				rf_c = self.estimator
+				clf = rf_c.fit(tr_x, tr_y)
+
+				return clf, te_x, te_y, prob
+
+
+			elif len(value_sets) > self.threshold:
+				prob = "Regression"
+				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
+				rf_r = self.estimator
+				clf = rf_r.fit(tr_x, tr_y)
+
+				return clf, te_x, te_y, prob
 		
 
 	def scoring(self, clf, te_x, te_y, prob):
