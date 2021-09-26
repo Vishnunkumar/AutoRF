@@ -185,9 +185,9 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return mean_absolute_error(y_true, y_pred)
+					return mean_absolute_error(y_true, y_pred), "mean_absolute_error"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 			
@@ -196,9 +196,9 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred, average="weighted")
+					return f1_score(y_true, y_pred, average="weighted"), "f1_score_weighted"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 			
@@ -206,9 +206,9 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred)
+					return f1_score(y_true, y_pred), "f1_score"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 		
@@ -218,9 +218,9 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return mean_absolute_error(y_true, y_pred)
+					return mean_absolute_error(y_true, y_pred), "mean_absolute_error"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 			
@@ -229,9 +229,9 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, stratify=self.target, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred, average="weighted")
+					return f1_score(y_true, y_pred, average="weighted"), "f1_score_weighted"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 			
@@ -239,14 +239,14 @@ class AutoRF:
 				tr_x, te_x, tr_y, te_y = train_test_split(self.train, self.target, test_size=0.2, shuffle=True)
 				
 				def custom_score(y_true, y_pred):
-					return f1_score(y_true, y_pred)
+					return f1_score(y_true, y_pred), "f1_score"
 				
-				scorer = make_scorer(custom_score)
+				scorer, name = make_scorer(custom_score)
 				grid_search = GridSearchCV(clf, param_grid=self.param_dict, n_jobs=self.n_jobs, scoring=scorer)
 				grid_search.fit(tr_x, tr_y)
 				
 		
-		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, scorer
+		return grid_search.best_estimator_, grid_search.best_score_, self.param_dict, self.n_jobs, name
 		
 	def pipeline(self, typ="Normalization", th=100, estim='RF'):
 		
